@@ -74,7 +74,6 @@ function SignUp() {
                 </Typography>
                 <Box component="form" onSubmit={handleSignUp} noValidate sx={{ mt: 1 }}>
                     <Username username={username} setUsername={setUsername} usernameIsValid={usernameIsValid} />
-
                     <Email email={email} emailIsValid={emailIsValid} setEmail={setEmail} />
                     <Password password={password} label="Password" passwordIsValid={passwordIsValid} setPassword={setPassword} />
                     <Password password={passwordConfirm}  label="Confirm Password" passwordIsValid={passwordConfirmIsValid} setPassword={setPasswordConfirm} />

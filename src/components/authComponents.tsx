@@ -41,7 +41,7 @@ export const Password: React.FunctionComponent<{
             label={passwordIsValid ? label : 'Minimum 8 characters'}
             error={!passwordIsValid}
             type="password"
-            id="password"
+            id={label}
             autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -76,19 +76,24 @@ export const Username: React.FunctionComponent<{
     )
 }
 
-export const Code: React.FunctionComponent<{ codeIsValid: boolean; setCode: (_: string) => void }> = ({
-                                                                                                          codeIsValid,
-                                                                                                          setCode,
-                                                                                                      }) => {
+export const Code: FunctionComponent<{ code: string, codeIsValid: boolean; setCode: (_: string) => void }> = ({
+                                                                                                                  code,
+                                                                                                                  codeIsValid,
+                                                                                                                  setCode,
+                                                                                                              }) => {
     return (
         <TextField
-            fullWidth
             variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="code"
             label={codeIsValid ? 'Code' : 'Minimum 6 characters'}
             error={!codeIsValid}
-            onChange={(evt: React.ChangeEvent<HTMLTextAreaElement>) => {
-                setCode(evt.target.value)
-            }}
+            name="code"
+            autoComplete="off"
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
         />
     )
 }
