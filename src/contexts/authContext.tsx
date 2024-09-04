@@ -27,7 +27,7 @@ export interface IAuth {
     attrInfo?: any
     currentUser?: IUser | null
     authStatus?: AuthStatus
-    signIn?: any
+    signIn: (username: string, password: string) => Promise<any>
     signUp?: any
     signOut?: any
     verifyAccount?: any
