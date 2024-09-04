@@ -19,10 +19,11 @@ interface IUser {
     email_verified?: boolean
     family_name?: string
     birthdate?: string
+    userID?: string
 }
 
 export interface IAuth {
-    sessionInfo?: { accessToken?: string; refreshToken?: string }
+    sessionInfo?: ISession
     attrInfo?: any
     currentUser?: IUser | null
     authStatus?: AuthStatus
@@ -36,6 +37,11 @@ export interface IAuth {
     changePassword?: any
     getAttributes?: any
     setAttribute?: any
+}
+
+interface ISession {
+    accessToken?: string
+    refreshToken?: string
 }
 
 const defaultState: IAuth = {
@@ -62,44 +68,46 @@ export const AuthIsNotSignedIn = ({children}: Props) => {
 }
 
 
-
 const AuthProvider = ({children}: Props) => {
     const [authStatus, setAuthStatus] = useState<AuthStatus>(AuthStatus.Loading)
-    const [sessionInfo, setSessionInfo] = useState({})
+    const [sessionInfo, setSessionInfo] = useState<ISession>({})
     const [attrInfo, setAttrInfo] = useState([])
     const [currentUser, setCurrentUser] = useState<IUser | null>(null)
 
     // TODO add auth client
     // const amplifyClient = useAmplifyClient();
 
-    useEffect(() => {
-        async function getSessionInfo() {
-            try {
-                window.localStorage.setItem('accessToken', `${sessionInfo?.accessToken}`)
-                window.localStorage.setItem('refreshToken', `${sessionInfo?.refreshToken}`)
-                const userAttributes = await getCurrentUser()
-                for (const {Name, Value} of userAttributes) {
-                    setCurrentUser(prev => ({...prev, [Name]: Value}))
-                }
-
-                // TODO query user data in DB
-                // const userQuery = await amplifyClient.graphql({
-                //     query: listUsers,
-                //     variables: {
-                //         filter: {
-                //             username: {eq: user.username}
-                //         }
-                //     }
-                // });
-                // const userID = userQuery.data.listUsers.items[0].id
-                const userID = 'mockUserID'
-                setCurrentUser(prev => ({...prev, userID}))
-                setAuthStatus(AuthStatus.SignedIn)
-            } catch (err) {
-                setAuthStatus(AuthStatus.SignedOut)
+    async function getSessionInfo() {
+        try {
+            window.localStorage.setItem('accessToken', `${sessionInfo?.accessToken}`)
+            window.localStorage.setItem('refreshToken', `${sessionInfo?.refreshToken}`)
+            if (!sessionInfo.accessToken) {
+                throw new Error('user are signed out')
             }
-        }
+            for (const {Name, Value} of userAttributes) {
+                setCurrentUser(prev => prev && ({...prev, [Name]: Value}))
+            }
+            const userAttributes = await getCurrentUser()
 
+            // TODO query user data in DB
+            // const userQuery = await amplifyClient.graphql({
+            //     query: listUsers,
+            //     variables: {
+            //         filter: {
+            //             username: {eq: user.username}
+            //         }
+            //     }
+            // });
+            // const userID = userQuery.data.listUsers.items[0].id
+            const userID = 'mockUserID'
+            setCurrentUser(prev => prev && ({...prev, userID}))
+            setAuthStatus(AuthStatus.SignedIn)
+        } catch (err) {
+            setAuthStatus(AuthStatus.SignedOut)
+        }
+    }
+
+    useEffect(() => {
         getSessionInfo()
     }, [setAuthStatus, authStatus])
 
