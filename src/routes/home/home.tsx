@@ -1,9 +1,21 @@
-import { useState } from 'react'
+import {FormEvent, useContext, useState} from 'react'
 import reactLogo from '../../assets/react.svg'
 import viteLogo from '../../../public/vite.svg'
+import {AuthContext} from "../../contexts/authContext.tsx";
+import {Pathname} from "../constants.ts";
+import {useNavigate} from "react-router-dom";
 
 function Home() {
+    const authContext = useContext(AuthContext)
+    const navigate = useNavigate()
     const [count, setCount] = useState(0)
+
+    const handleSignOut = async (event: FormEvent) => {
+        event.preventDefault();
+        // Handle sign-up logic here
+        await authContext.signOut()
+        navigate(Pathname.DEFAULT)
+    };
 
     return (
         <>
@@ -27,6 +39,9 @@ function Home() {
             <p className="read-the-docs">
                 Click on the Vite and React logos to learn more
             </p>
+            <button onClick={handleSignOut}>
+                Sign out
+            </button>
         </>
     )
 }
