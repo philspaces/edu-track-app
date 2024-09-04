@@ -1,20 +1,26 @@
 // import TextField from '@material-ui/core/TextField'
 
 import {TextField} from "@mui/material";
+import {FunctionComponent} from "react";
 
-export const Email: React.FunctionComponent<{ emailIsValid: boolean; setEmail: (_: string) => void }> = ({
-                                                                                                             emailIsValid,
-                                                                                                             setEmail,
-                                                                                                         }) => {
+export const Email: FunctionComponent<{ email: string, emailIsValid: boolean; setEmail: (_: string) => void }> = ({
+                                                                                                                      email,
+                                                                                                                      emailIsValid,
+                                                                                                                      setEmail,
+                                                                                                                  }) => {
     return (
         <TextField
-            fullWidth
             variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="email"
             label={emailIsValid ? 'Email' : 'Invalid Email'}
             error={!emailIsValid}
-            onChange={(evt: React.ChangeEvent<HTMLTextAreaElement>) => {
-                setEmail(evt.target.value)
-            }}
+            name="email"
+            autoComplete="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
         />
     )
 }
