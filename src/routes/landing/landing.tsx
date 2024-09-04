@@ -2,6 +2,7 @@ import {useNavigate} from 'react-router-dom'
 import logoImage from '../../assets/react.svg'
 import {Box, Button, Grid, styled, Typography} from "@mui/material";
 import {FunctionComponent} from "react";
+import {Pathname} from "../constants.ts";
 
 const PREFIX = 'Landing';
 
@@ -20,7 +21,7 @@ const Landing: FunctionComponent = () => {
     const navigate = useNavigate()
 
     const signIn = () => {
-        navigate('/signin')
+        navigate(Pathname.SIGN_IN)
     }
 
     return (<StyledGrid className={classes.root}>
@@ -29,7 +30,7 @@ const Landing: FunctionComponent = () => {
             </Box>
             <Box m={2}>
                 <Typography className={classes.title} variant="h3">
-                    AWS Cognito
+                    Edu Track App
                 </Typography>
             </Box>
             <Box m={2}>

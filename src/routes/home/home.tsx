@@ -12,7 +12,7 @@ function Home() {
 
     const handleSignOut = async (event: FormEvent) => {
         event.preventDefault();
-        // Handle sign-up logic here
+
         await authContext.signOut()
         navigate(Pathname.DEFAULT)
     };

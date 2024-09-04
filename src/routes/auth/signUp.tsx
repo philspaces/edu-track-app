@@ -43,7 +43,6 @@ function SignUp() {
 
     const handleSignUp = async (event: FormEvent) => {
         event.preventDefault();
-        // Handle sign-up logic here
 
         try {
             await authContext.signUp(username, email, password)
