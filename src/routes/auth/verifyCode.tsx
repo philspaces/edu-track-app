@@ -71,10 +71,10 @@ function VerifyUsername() {
                     >
                         Verify
                     </Button>
-                    <Grid container>
+                    <Grid>
                         <Grid item>
-                            <Link href="#" variant="body2">
-                                Resend Code
+                            <Link onClick={() => navigate(Pathname.SIGN_IN)} variant="body2">
+                                Already have an account? Sign in
                             </Link>
                         </Grid>
                     </Grid>
