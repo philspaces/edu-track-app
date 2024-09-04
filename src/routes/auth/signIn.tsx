@@ -1,4 +1,4 @@
-import {useContext, useState} from 'react';
+import {FormEvent, useContext, useState} from 'react';
 import {
     Container,
     Box,
@@ -28,10 +28,10 @@ function SignIn() {
     const isValid = !usernameIsValid || username.length === 0 || !passwordIsValid || password.length === 0
 
 
-    const handleSignIn = async (event) => {
+    const handleSignIn = async (event:FormEvent) => {
         event.preventDefault();
         try {
-            await authContext.signIn(username, password)
+            await authContext?.signIn(username, password)
             navigate(Pathname.DEFAULT)
         } catch (err: any) {
             if (err.code === 'UserNotConfirmedException') {

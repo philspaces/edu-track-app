@@ -23,7 +23,7 @@ const Landing: FunctionComponent = () => {
         navigate('/signin')
     }
 
-    return (<StyledGrid container className={classes.root}>
+    return (<StyledGrid className={classes.root}>
             <Box m={2}>
                 <img src={logoImage} width={224} height={224} alt="logo"/>
             </Box>

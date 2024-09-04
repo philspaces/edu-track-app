@@ -47,6 +47,8 @@ interface ISession {
 const defaultState: IAuth = {
     sessionInfo: {},
     authStatus: AuthStatus.Loading,
+    signIn: async (username, password) => {
+    }
 }
 
 type Props = {
@@ -84,10 +86,11 @@ const AuthProvider = ({children}: Props) => {
             if (!sessionInfo.accessToken) {
                 throw new Error('user are signed out')
             }
+
+            const userAttributes = await getCurrentUser()
             for (const {Name, Value} of userAttributes) {
                 setCurrentUser(prev => prev && ({...prev, [Name]: Value}))
             }
-            const userAttributes = await getCurrentUser()
 
             // TODO query user data in DB
             // const userQuery = await amplifyClient.graphql({
