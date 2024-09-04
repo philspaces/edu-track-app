@@ -28,8 +28,7 @@ function VerifyUsername() {
     const [error, setError] = useState('')
 
     const isValid = !usernameIsValid || username.length === 0 || !codeIsValid || code.length === 0
-    console.log('codeIsValid: ', codeIsValid);
-    console.log('isValid: ', isValid);
+
     const handleVerification = async (event: SyntheticEvent) => {
         event.preventDefault();
         try {
