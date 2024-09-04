@@ -2,7 +2,6 @@ import axios from 'axios';
 
 const API_BASE_URL = 'https://e3k1u4orz1.execute-api.ap-southeast-2.amazonaws.com/prod/auth';
 
-// TODO store&retrieve accessToken from localStorage
 const apiRequest = async (endpoint, method, data) => {
     try {
         const response = await axios({
@@ -40,10 +39,17 @@ export const login = async (username, password) => {
     return await apiRequest('login', 'POST', {username, password});
 };
 
-export const logout = async (accessToken) => {
-    return await apiRequest('logout', 'POST', accessToken);
+export const logout = async () => {
+    const accessToken = window.localStorage.getItem('accessToken')
+    return await apiRequest('logout', 'POST', {accessToken});
 };
 
-export const getUser = async (accessToken) => {
-    return await apiRequest('getUser', 'POST', accessToken);
+export const getUser = async () => {
+    const accessToken = window.localStorage.getItem('accessToken')
+    return await apiRequest('getUser', 'POST', {accessToken});
+};
+
+export const refreshToken = async () => {
+    const refreshToken = window.localStorage.getItem('refreshToken')
+    return await apiRequest('getSession', 'POST', {refreshToken});
 };
