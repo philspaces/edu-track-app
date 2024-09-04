@@ -27,9 +27,9 @@ export const signUp = async (username:string, password:string, email:string) => 
 
 export const verifyAccount = async  (username:string, code: string) => {
     if (!username || !code) {
-        throw new Error('username and password are required.');
+        throw new Error('username and code are required.');
     }
-    return await apiRequest('signup', 'POST', {username, code});
+    return await apiRequest('verify', 'POST', {username, code});
 };
 
 export const login = async (username:string, password: string) => {
