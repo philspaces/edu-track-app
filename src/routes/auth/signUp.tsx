@@ -92,7 +92,7 @@ function SignUp() {
                     </Button>
                     <Grid container justifyContent="flex-end">
                         <Grid item>
-                            <Link href={Pathname.SIGN_IN} variant="body2">
+                            <Link onClick={() => navigate(-1)} variant="body2">
                                 Already have an account? Sign in
                             </Link>
                         </Grid>
