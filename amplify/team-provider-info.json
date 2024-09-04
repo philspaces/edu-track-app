@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-edutrack-dev-452f4-authRole",
+      "UnauthRoleArn": "arn:aws:iam::302263083994:role/amplify-edutrack-dev-452f4-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::302263083994:role/amplify-edutrack-dev-452f4-authRole",
+      "Region": "ap-southeast-2",
+      "DeploymentBucketName": "amplify-edutrack-dev-452f4-deployment",
+      "UnauthRoleName": "amplify-edutrack-dev-452f4-unauthRole",
+      "StackName": "amplify-edutrack-dev-452f4",
+      "StackId": "arn:aws:cloudformation:ap-southeast-2:302263083994:stack/amplify-edutrack-dev-452f4/fdbca0a0-6ae4-11ef-b20a-062bd2b3270b",
+      "AmplifyAppId": "d35r8mrdmvzimo"
+    },
+    "categories": {
+      "api": {
+        "edutrack": {}
+      }
+    }
+  }
+}
