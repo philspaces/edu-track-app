@@ -1,49 +1,113 @@
-import {FormEvent, useContext, useState} from 'react'
-import reactLogo from '../../assets/react.svg'
-import viteLogo from '../../../public/vite.svg'
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import {createTheme} from '@mui/material/styles';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import {AppProvider, Session} from '@toolpad/core/AppProvider';
+import {DashboardLayout} from '@toolpad/core/DashboardLayout';
+import type {Navigation, Router} from '@toolpad/core';
+import {useContext} from "react";
 import {AuthContext} from "../../contexts/authContext.tsx";
-import {Pathname} from "../constants.ts";
 import {useNavigate} from "react-router-dom";
+import {Pathname} from "../constants.ts";
+import StudentsSection from "../../components/TasksSection/StudentsSection.tsx";
 
-function Home() {
+const NAVIGATION: Navigation = [
+    {
+        segment: '',
+        title: 'Dashboard',
+        icon: <DashboardIcon/>,
+    }
+];
+
+const theme = createTheme({
+    cssVariables: {
+        colorSchemeSelector: 'data-toolpad-color-scheme',
+    },
+    colorSchemes: {light: true, dark: true},
+    breakpoints: {
+        values: {
+            xs: 0,
+            sm: 600,
+            md: 600,
+            lg: 1200,
+            xl: 1536,
+        },
+    },
+});
+
+function PageContent() {
+    return (
+        <StudentsSection/>
+    );
+}
+
+
+export default function Home() {
+    const [pathname, setPathname] = React.useState('/');
+
+    const router = React.useMemo<Router>(() => {
+        return {
+            pathname,
+            searchParams: new URLSearchParams(),
+            navigate: (path) => setPathname(String(path)),
+        };
+    }, [pathname]);
+
+
     const authContext = useContext(AuthContext)
     const navigate = useNavigate()
-    const [count, setCount] = useState(0)
-
-    const handleSignOut = async (event: FormEvent) => {
-        event.preventDefault();
-
+    const handleSignOut = async () => {
         await authContext.signOut()
         navigate(Pathname.DEFAULT)
     };
 
-    return (
-        <>
-            <div>
-                <a href="https://vitejs.dev" target="_blank">
-                    <img src={viteLogo} className="logo" alt="Vite logo" />
-                </a>
-                <a href="https://react.dev" target="_blank">
-                    <img src={reactLogo} className="logo react" alt="React logo" />
-                </a>
-            </div>
-            <h1>Vite + React</h1>
-            <div className="card">
-                <button onClick={() => setCount((count) => count + 1)}>
-                    count is {count}
-                </button>
-                <p>
-                    Edit <code>src/App.tsx</code> and save to test HMR
-                </p>
-            </div>
-            <p className="read-the-docs">
-                Click on the Vite and React logos to learn more
-            </p>
-            <button onClick={handleSignOut}>
-                Sign out
-            </button>
-        </>
-    )
-}
 
-export default Home
+    const currentUser = authContext.currentUser
+
+    const [session, setSession] = React.useState<Session | null>({
+        user: {
+            name: currentUser?.username,
+            email: currentUser?.email,
+            image: 'https://avatars.githubusercontent.com/u/19550456',
+        },
+    });
+
+    const authentication = React.useMemo(() => {
+        return {
+            signIn: () => {
+                setSession({
+                    user: {
+                        name: currentUser?.username,
+                        email: currentUser?.email,
+                        image: 'https://avatars.githubusercontent.com/u/19550456',
+                    },
+                });
+            },
+            signOut: async () => {
+                setSession(null);
+                await handleSignOut()
+            },
+        };
+    }, []);
+
+    // TODO update LOGO
+    return (
+        <AppProvider
+            navigation={NAVIGATION}
+            branding={{
+                logo: <img src="https://mui.com/static/logo.png" alt="MUI logo"/>,
+                title: 'MUI',
+            }}
+            session={session}
+            authentication={authentication}
+            router={router}
+            theme={theme}
+        >
+            <DashboardLayout>
+                <PageContent/>
+            </DashboardLayout>
+        </AppProvider>
+
+    );
+}

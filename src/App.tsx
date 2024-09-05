@@ -1,7 +1,8 @@
+import CssBaseline from "@mui/material/CssBaseline"; // must be first thing to import
+
 import './App.css'
 import Home from "./routes/home/home.tsx";
 import {createTheme, ThemeProvider} from '@mui/material/styles';
-import {CssBaseline} from "@mui/material";
 import {BrowserRouter, Route, Routes} from 'react-router-dom'
 import AuthProvider, {AuthIsNotSignedIn, AuthIsSignedIn} from "./contexts/authContext.tsx";
 import SignIn from "./routes/auth/signIn.tsx";
@@ -11,6 +12,7 @@ import Landing from "./routes/landing/landing.tsx";
 import {Toaster} from "react-hot-toast";
 import {Pathname} from "./routes/constants.ts";
 import {AmplifyClientProvider} from "./contexts/amplifyClientContext.tsx";
+import {StyledEngineProvider} from '@mui/material/styles';
 
 // import GlobalProvider from "./contexts/globalProvider.tsx";
 
@@ -46,17 +48,19 @@ function App() {
     return <ThemeProvider theme={lightTheme}>
         <CssBaseline/>
         <AmplifyClientProvider>
-            <AuthProvider>
-                <AuthIsSignedIn>
-                    {/*<GlobalProvider>*/}
-                    <Toaster/>
-                    <MainRoute/>
-                    {/*</GlobalProvider>*/}
-                </AuthIsSignedIn>
-                <AuthIsNotSignedIn>
-                    <SignInRoute/>
-                </AuthIsNotSignedIn>
-            </AuthProvider>
+            <StyledEngineProvider>
+                <AuthProvider>
+                    <AuthIsSignedIn>
+                        {/*<GlobalProvider>*/}
+                        <Toaster/>
+                        <MainRoute/>
+                        {/*</GlobalProvider>*/}
+                    </AuthIsSignedIn>
+                    <AuthIsNotSignedIn>
+                        <SignInRoute/>
+                    </AuthIsNotSignedIn>
+                </AuthProvider>
+            </StyledEngineProvider>
         </AmplifyClientProvider>
     </ThemeProvider>
 }
