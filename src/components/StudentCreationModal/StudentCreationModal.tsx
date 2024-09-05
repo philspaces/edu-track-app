@@ -1,5 +1,5 @@
 import {useContext, useState} from 'react';
-import {Box, Button, Checkbox, FormControlLabel, IconButton, Modal, TextField, Typography,} from '@mui/material';
+import {Box, Button, IconButton, Modal, TextField, Typography,} from '@mui/material';
 import {Close as CloseIcon} from '@mui/icons-material';
 import {useGlobalState} from "../../contexts/globalProvider.tsx";
 import {useAmplifyClient} from "../../contexts/amplifyClientContext.tsx";
@@ -7,13 +7,14 @@ import {createStudent, updateStudent} from "../../graphql/mutations.js";
 import {AuthContext} from "../../contexts/authContext.tsx";
 import {format} from "date-fns";
 
-interface IStudent {
+export interface IStudent {
     studentID: string
     teacherID: string
     firstName: string
     lastName?: string
     dob?: string
     email?: string
+    id?: string
 }
 
 const defaultStudentData: IStudent = {
@@ -25,12 +26,11 @@ const defaultStudentData: IStudent = {
     email: '',
 }
 
-interface Props {
-    isEditing?: boolean
-    prefilledData?: Partial<IStudent>
+type Props = {
+    prefilledData?: any // Partial<IStudent>
 }
 
-const StudentCreationModal = ({isEditing, prefilledData}: Props) => {
+const StudentCreationModal = ({prefilledData}: Props) => {
     const {modal: open, closeModal} = useGlobalState();
     const amplifyClient = useAmplifyClient()
     const {currentUser} = useContext(AuthContext)
@@ -49,7 +49,7 @@ const StudentCreationModal = ({isEditing, prefilledData}: Props) => {
 
     const isValid = studentData.studentID.length === 0 || studentData.firstName.length === 0
 
-    const handleChange = (e) => {
+    const handleChange = (e:any) => {
         const {name, value, type, checked} = e.target;
         setStudentData((prevData) => ({
             ...prevData,
@@ -57,7 +57,7 @@ const StudentCreationModal = ({isEditing, prefilledData}: Props) => {
         }));
     };
 
-    const handleSubmitStudentCreation = async (data) => {
+    const handleSubmitStudentCreation = async (data: IStudent) => {
         try {
             const isEditing = data.id
             if (isEditing) {
@@ -71,7 +71,7 @@ const StudentCreationModal = ({isEditing, prefilledData}: Props) => {
                             lastName: data.lastName,
                             email: data.email,
                             dob: data.dob,
-                            teacherID: currentUser.userID
+                            teacherID: currentUser?.userID
                         }
                     }
                 });
@@ -81,7 +81,7 @@ const StudentCreationModal = ({isEditing, prefilledData}: Props) => {
                     variables: {
                         input: {
                             ...data,
-                            teacherID: currentUser.userID
+                            teacherID: currentUser?.userID
                         }
                     }
                 });
@@ -97,7 +97,7 @@ const StudentCreationModal = ({isEditing, prefilledData}: Props) => {
     const handleFormSubmit = async () => {
         const formattedData = {
             ...studentData,
-            dob: new Date(studentData.dob).toISOString()
+            dob: studentData?.dob && new Date(studentData.dob).toISOString()
         }
 
         await handleSubmitStudentCreation(formattedData)
@@ -108,7 +108,7 @@ const StudentCreationModal = ({isEditing, prefilledData}: Props) => {
     };
 
     return (
-        <Modal open={open} onClose={closeModal}>
+        <Modal open={!!open} onClose={closeModal}>
             <Box
                 sx={{
                     position: 'absolute',

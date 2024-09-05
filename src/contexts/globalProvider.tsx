@@ -1,11 +1,9 @@
-import {createContext, useContext, useEffect, useState} from "react";
-import authContext from "./authContext.tsx";
+import {createContext, ReactNode, useContext, useEffect, useState} from "react";
 import {useAmplifyClient} from "./amplifyClientContext.tsx";
 import * as subscriptions from "../graphql/subscriptions.js";
 import toast from "react-hot-toast";
 
 export interface IGlobal {
-    isLoading?: boolean,
     modal?: boolean,
     isStudentsUpdated?: boolean,
     openModal: () => void,
@@ -23,11 +21,9 @@ const defaultState = {
 }
 
 export const GlobalContext = createContext<IGlobal>(defaultState);
-const GlobalProvider = ({children}) => {
-    const {currentUser: user} = authContext
+const GlobalProvider = ({children}: { children: ReactNode }) => {
     const amplifyClient = useAmplifyClient();
 
-    const [isLoading, setIsLoading] = useState(false);
     const [modal, setModal] = useState(false);
     const [isStudentsUpdated, setIsStudentsUpdated] = useState(false);
 
@@ -43,13 +39,13 @@ const GlobalProvider = ({children}) => {
     useEffect(() => {
         const createSub = amplifyClient
             .graphql({query: subscriptions.onCreateStudent})
+            // @ts-ignore
             .subscribe({
-                next: ({data}) => {
+                next: () => {
                     setIsStudentsUpdated(prev => !prev)
                     toast.success('New student added!')
-                    console.log(data)
                 },
-                error: (error) => {
+                error: (error: Error) => {
                     toast.error("Something went wrong")
                     console.warn(error)
                 }
@@ -57,13 +53,13 @@ const GlobalProvider = ({children}) => {
 
         const updateSub = amplifyClient
             .graphql({query: subscriptions.onUpdateStudent})
+            // @ts-ignore
             .subscribe({
-                next: ({data}) => {
+                next: () => {
                     setIsStudentsUpdated(prev => !prev)
                     toast.success('Update successfully!')
-                    console.log(data)
                 },
-                error: (error) => {
+                error: (error: Error) => {
                     toast.error("Something went wrong")
                     console.warn(error)
                 }
@@ -71,13 +67,13 @@ const GlobalProvider = ({children}) => {
 
         const deleteSub = amplifyClient
             .graphql({query: subscriptions.onDeleteStudent})
+            // @ts-ignore
             .subscribe({
-                next: ({data}) => {
+                next: () => {
                     setIsStudentsUpdated(prev => !prev)
                     toast.success('Delete successfully!')
-                    console.log(data)
                 },
-                error: (error) => {
+                error: (error: Error) => {
                     toast.error("Something went wrong")
                     console.warn(error)
                 }
@@ -91,7 +87,6 @@ const GlobalProvider = ({children}) => {
     }, []);
 
     const state: IGlobal = {
-        isLoading,
         modal,
         openModal,
         closeModal,

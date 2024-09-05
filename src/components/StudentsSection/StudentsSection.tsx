@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import {useGlobalState} from "../../contexts/globalProvider.tsx";
-import StudentCreationModal from "../StudentCreationModal/StudentCreationModal.tsx";
+import StudentCreationModal, {IStudent} from "../StudentCreationModal/StudentCreationModal.tsx";
 import Grid from '@mui/material/Grid2';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -19,8 +19,15 @@ import {listStudents} from "../../graphql/queries.js";
 import {useContext, useEffect, useState} from "react";
 import {AuthContext} from "../../contexts/authContext.tsx";
 import {format} from "date-fns";
+import {deleteStudent} from "../../graphql/mutations.js";
 
-const StudentCard = ({student, onEdit, onDelete}) => (
+interface StudentCardProp {
+    student: IStudent,
+    onEdit: () => void,
+    onDelete: () => void
+}
+
+const StudentCard = ({student, onEdit, onDelete}: StudentCardProp) => (
     <Card>
         <CardContent>
             <Typography variant="h6" component="div">
@@ -33,7 +40,7 @@ const StudentCard = ({student, onEdit, onDelete}) => (
                 {student.email}
             </Typography>
             <Typography variant="body2">
-                Date of Birth: {format(new Date(student.dob), 'P')}
+                Date of Birth: {student?.dob && format(new Date(student.dob), 'P')}
             </Typography>
         </CardContent>
         <CardActions disableSpacing>
@@ -54,15 +61,15 @@ const StudentsSection = () => {
     const authContext = useContext(AuthContext)
     const currentUser = authContext.currentUser
     const amplifyClient = useAmplifyClient();
-    const [students, setStudents] = useState([]);
-    const [editData, setEditData] = useState()
+    const [students, setStudents] = useState<IStudent[]>([]);
+    const [editData, setEditData] = useState<IStudent | null>()
 
 
     const fetchStudents = async () => {
         try {
-            const studentData = await amplifyClient.graphql({
+            const studentData: any = await amplifyClient.graphql({
                 query: listStudents,
-                variables: {filter: {teacherID: {eq: currentUser.userID}}}
+                variables: {filter: {teacherID: {eq: currentUser?.userID}}}
             });
 
             setStudents(studentData.data.listStudents.items);
@@ -76,9 +83,21 @@ const StudentsSection = () => {
     }, [isStudentsUpdated]);
 
 
-    const handleEditStudentClick = (student) => {
+    const handleEditStudentClick = (student: IStudent) => {
         setEditData(student)
         openModal()
+    }
+
+    const handleDeleteStudentClick = async (student: IStudent) => {
+        // Simplification: Skip confirm delete users
+        await amplifyClient.graphql({
+            query: deleteStudent,
+            variables: {
+                input: {
+                    id: student.id
+                }
+            }
+        });
     }
 
     const handleAddNewClick = () => {
@@ -103,7 +122,9 @@ const StudentsSection = () => {
                 <Grid container spacing={2}>
                     {students.map((student) => (
                         <Grid key={student.id} size={cardSize}>
-                            <StudentCard student={student} onEdit={() => handleEditStudentClick(student)}/>
+                            <StudentCard student={student}
+                                         onEdit={() => handleEditStudentClick(student)}
+                                         onDelete={() => handleDeleteStudentClick(student)}/>
                         </Grid>
                     ))}
                     <Grid size={cardSize}>
