@@ -16,6 +16,7 @@ export enum AuthStatus {
 interface IUser {
     "username"?: string,
     "email"?: string,
+    "userID"?: string
 }
 
 export interface IAuth {
