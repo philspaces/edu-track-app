@@ -86,9 +86,12 @@ const AuthProvider = ({children}: Props) => {
 
     async function getSessionInfo() {
         try {
-            window.localStorage.setItem('accessToken', `${sessionInfo?.accessToken}`)
-            window.localStorage.setItem('refreshToken', `${sessionInfo?.refreshToken}`)
-            if (!sessionInfo.accessToken) {
+            const savedAccessToken = window.localStorage.getItem('accessToken')
+            const savedRefreshToken = window.localStorage.getItem('refreshToken')
+            window.localStorage.setItem('accessToken', `${sessionInfo?.accessToken || savedAccessToken}`)
+            window.localStorage.setItem('refreshToken', `${sessionInfo?.refreshToken || savedRefreshToken}`)
+
+            if (!sessionInfo.accessToken && !savedAccessToken) {
                 throw new Error('user are signed out')
             }
 
@@ -114,6 +117,7 @@ const AuthProvider = ({children}: Props) => {
             }))
             setAuthStatus(AuthStatus.SignedIn)
         } catch (err) {
+            console.error(err)
             setAuthStatus(AuthStatus.SignedOut)
         }
     }
