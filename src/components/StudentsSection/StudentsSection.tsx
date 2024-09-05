@@ -131,7 +131,7 @@ const StudentsSection = () => {
                         <Card sx={{
                             border: '2px dashed #4A4A4A',
                             cursor: 'pointer',
-                            paddingY: '8px',
+                            paddingY: '20px',
                             backgroundColor: theme.palette.background.default,
                             '&:hover': {
                                 backgroundColor: theme.palette.mode === 'dark'
