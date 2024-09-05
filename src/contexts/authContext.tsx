@@ -127,8 +127,21 @@ const AuthProvider = ({children}: Props) => {
         try {
             const {message, ...loginRes} = await authService.login(username, password)
             window.localStorage.setItem('username', `${username}`)
+            window.localStorage.setItem('accessToken', `${loginRes?.accessToken}`)
+            window.localStorage.setItem('refreshToken', `${loginRes?.refreshToken}`)
 
-            setCurrentUser(prev => prev ? ({...(prev), username}) : ({username}))
+            const userQuery: any = await amplifyClient.graphql({
+                query: listTeachers,
+                variables: {
+                    filter: {
+                        username: {eq: username}
+                    }
+                }
+            });
+
+            const userID = userQuery.data?.listTeachers?.items?.[0]?.id
+            setCurrentUser({userID, username})
+
             setSessionInfo(loginRes)
             setAuthStatus(AuthStatus.SignedIn)
         } catch (err) {
@@ -140,7 +153,6 @@ const AuthProvider = ({children}: Props) => {
     async function signUp(username: string, email: string, password: string) {
         try {
             await authService.signUp(username, password, email)
-            window.localStorage.setItem('username', `${username}`)
 
             const userMutation: any = await amplifyClient.graphql({
                 query: createTeacher,
@@ -159,6 +171,8 @@ const AuthProvider = ({children}: Props) => {
 
     function signOut() {
         authService.logout()
+        window.localStorage.setItem('accessToken', '')
+        window.localStorage.setItem('refreshToken', '')
         setAuthStatus(AuthStatus.SignedOut)
     }
 
