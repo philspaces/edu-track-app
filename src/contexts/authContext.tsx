@@ -2,9 +2,10 @@ import {createContext, ReactNode, useContext, useEffect, useState} from 'react'
 
 import * as authService from '../libs/authService.ts'
 import {refreshToken} from "../libs/authService.ts";
+import {useAmplifyClient} from "./amplifyClientContext.tsx";
 
-// import {useAmplifyClient} from "./amplifyClientContext.tsx";
-// import {listUsers} from "../graphql/queries.js";
+import {listTeachers} from "../graphql/queries.js";
+import {createTeacher} from "../graphql/mutations.js";
 
 export enum AuthStatus {
     Loading,
@@ -12,7 +13,7 @@ export enum AuthStatus {
     SignedOut,
 }
 
-interface IUser {
+interface IStudent {
     given_name: string
     sub: string
     email?: string
@@ -20,6 +21,11 @@ interface IUser {
     family_name?: string
     birthdate?: string
     userID?: string
+}
+
+interface IUser {
+    "username": string,
+    "email": string,
 }
 
 export interface IAuth {
@@ -76,8 +82,7 @@ const AuthProvider = ({children}: Props) => {
     const [attrInfo, setAttrInfo] = useState([])
     const [currentUser, setCurrentUser] = useState<IUser | null>(null)
 
-    // TODO add auth client
-    // const amplifyClient = useAmplifyClient();
+    const amplifyClient = useAmplifyClient();
 
     async function getSessionInfo() {
         try {
@@ -88,22 +93,25 @@ const AuthProvider = ({children}: Props) => {
             }
 
             const userAttributes = await getCurrentUser()
+            let tempUserAttributes: IUser = {username: '', email: ''}
             for (const {Name, Value} of userAttributes) {
-                setCurrentUser(prev => prev && ({...prev, [Name]: Value}))
+                tempUserAttributes = {...tempUserAttributes, [Name]: Value}
             }
 
-            // TODO query user data in DB
-            // const userQuery = await amplifyClient.graphql({
-            //     query: listUsers,
-            //     variables: {
-            //         filter: {
-            //             username: {eq: user.username}
-            //         }
-            //     }
-            // });
-            // const userID = userQuery.data.listUsers.items[0].id
-            const userID = 'mockUserID'
-            setCurrentUser(prev => prev && ({...prev, userID}))
+            const userQuery = await amplifyClient.graphql({
+                query: listTeachers,
+                variables: {
+                    filter: {
+                        username: {eq: tempUserAttributes.username}
+                    }
+                }
+            });
+
+            const userID = userQuery.data?.listTeachers?.items?.[0]?.id
+            setCurrentUser(prev => prev ? ({...prev, ...tempUserAttributes, userID}) : ({
+                ...tempUserAttributes,
+                userID
+            }))
             setAuthStatus(AuthStatus.SignedIn)
         } catch (err) {
             setAuthStatus(AuthStatus.SignedOut)
@@ -121,8 +129,8 @@ const AuthProvider = ({children}: Props) => {
     async function signIn(username: string, password: string) {
         try {
             const {message, ...loginRes} = await authService.login(username, password)
+            setCurrentUser(prev => prev ? ({...(prev), username}) : ({username}))
             setSessionInfo(loginRes)
-
             setAuthStatus(AuthStatus.SignedIn)
         } catch (err) {
             setAuthStatus(AuthStatus.SignedOut)
@@ -133,6 +141,17 @@ const AuthProvider = ({children}: Props) => {
     async function signUp(username: string, email: string, password: string) {
         try {
             await authService.signUp(username, password, email)
+            // create teacher for new signup user
+            const userMutation = await amplifyClient.graphql({
+                query: createTeacher,
+                variables: {
+                    input: {
+                        username, email
+                    }
+                }
+            });
+            const userID = userMutation.data?.createTeacher?.id
+            setCurrentUser(prev => prev ? ({...prev, userID, username, email}) : ({userID, username, email}))
         } catch (err) {
             throw err
         }
