@@ -1,15 +1,15 @@
 import {Box, Card, CardContent, Fab, Typography, useTheme} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import {useGlobalState} from "../../contexts/globalProvider.tsx";
 // import TaskModal from "../TaskModal/TaskModal.tsx";
-// import {useGlobalState} from "../../contexts/globalProvider.tsx";
 
 const StudentsSection = () => {
     const theme = useTheme(); // Access the theme
-    // const { modal, openModal } = useGlobalState();
+    const {modal, openModal} = useGlobalState();
 
     return (
         <Box sx={{p: 3}}>
-            {/*{modal && <TaskModal />}*/}
+            {/*{modal && <TaskModal/>}*/}
 
             <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                 <Typography variant="h5" sx={{fontWeight: 'bold'}}>
@@ -30,7 +30,7 @@ const StudentsSection = () => {
                         : theme.palette.grey[300],
                 },
             }}
-                // onClick={openModal}
+                  onClick={openModal}
             >
                 <CardContent sx={{textAlign: 'center'}}>
                     <AddIcon sx={{fontSize: 40, mb: 2}}/>
@@ -48,7 +48,7 @@ const StudentsSection = () => {
                     bottom: '24px',
                     right: '24px'
                 }}
-                // onClick={openModal}
+                onClick={openModal}
             >
                 <AddIcon/>
             </Fab>

@@ -13,6 +13,7 @@ import {Toaster} from "react-hot-toast";
 import {Pathname} from "./routes/constants.ts";
 import {AmplifyClientProvider} from "./contexts/amplifyClientContext.tsx";
 import {StyledEngineProvider} from '@mui/material/styles';
+import GlobalProvider from "./contexts/globalProvider.tsx";
 
 // import GlobalProvider from "./contexts/globalProvider.tsx";
 
@@ -51,10 +52,10 @@ function App() {
             <StyledEngineProvider>
                 <AuthProvider>
                     <AuthIsSignedIn>
-                        {/*<GlobalProvider>*/}
-                        <Toaster/>
-                        <MainRoute/>
-                        {/*</GlobalProvider>*/}
+                        <GlobalProvider>
+                            <Toaster/>
+                            <MainRoute/>
+                        </GlobalProvider>
                     </AuthIsSignedIn>
                     <AuthIsNotSignedIn>
                         <SignInRoute/>
