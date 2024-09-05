@@ -1,10 +1,13 @@
-import {createContext, useContext, useMemo} from 'react';
+import {createContext, ReactNode, useContext, useMemo} from 'react';
 import {generateClient} from 'aws-amplify/api';
 import {V6Client} from "@aws-amplify/api-graphql";
 
 const AmplifyClientContext = createContext<V6Client | null>(null);
 
-export const AmplifyClientProvider = ({children}) => {
+interface Props {
+    children?: ReactNode
+}
+export const AmplifyClientProvider = ({children}:Props) => {
     const client = useMemo(() => generateClient(), []);
 
     return (

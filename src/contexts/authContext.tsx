@@ -24,8 +24,8 @@ interface IStudent {
 }
 
 interface IUser {
-    "username": string,
-    "email": string,
+    "username"?: string,
+    "email"?: string,
 }
 
 export interface IAuth {
@@ -98,7 +98,7 @@ const AuthProvider = ({children}: Props) => {
                 tempUserAttributes = {...tempUserAttributes, [Name]: Value}
             }
 
-            const userQuery = await amplifyClient.graphql({
+            const userQuery: any = await amplifyClient.graphql({
                 query: listTeachers,
                 variables: {
                     filter: {
@@ -142,7 +142,7 @@ const AuthProvider = ({children}: Props) => {
         try {
             await authService.signUp(username, password, email)
             // create teacher for new signup user
-            const userMutation = await amplifyClient.graphql({
+            const userMutation: any = await amplifyClient.graphql({
                 query: createTeacher,
                 variables: {
                     input: {
@@ -150,7 +150,7 @@ const AuthProvider = ({children}: Props) => {
                     }
                 }
             });
-            const userID = userMutation.data?.createTeacher?.id
+            const userID = userMutation?.data?.createTeacher?.id
             setCurrentUser(prev => prev ? ({...prev, userID, username, email}) : ({userID, username, email}))
         } catch (err) {
             throw err
