@@ -13,16 +13,6 @@ export enum AuthStatus {
     SignedOut,
 }
 
-interface IStudent {
-    given_name: string
-    sub: string
-    email?: string
-    email_verified?: boolean
-    family_name?: string
-    birthdate?: string
-    userID?: string
-}
-
 interface IUser {
     "username"?: string,
     "email"?: string,
@@ -88,15 +78,17 @@ const AuthProvider = ({children}: Props) => {
         try {
             const savedAccessToken = window.localStorage.getItem('accessToken')
             const savedRefreshToken = window.localStorage.getItem('refreshToken')
+            const savedUsername = window.localStorage.getItem('username')
             window.localStorage.setItem('accessToken', `${sessionInfo?.accessToken || savedAccessToken}`)
             window.localStorage.setItem('refreshToken', `${sessionInfo?.refreshToken || savedRefreshToken}`)
+            window.localStorage.setItem('username', `${currentUser?.username || savedUsername}`)
 
             if (!sessionInfo.accessToken && !savedAccessToken) {
                 throw new Error('user are signed out')
             }
 
             const userAttributes = await getCurrentUser()
-            let tempUserAttributes: IUser = {username: '', email: ''}
+            let tempUserAttributes: IUser = currentUser || {username: savedUsername || '', email: ''}
             for (const {Name, Value} of userAttributes) {
                 tempUserAttributes = {...tempUserAttributes, [Name]: Value}
             }
@@ -133,6 +125,8 @@ const AuthProvider = ({children}: Props) => {
     async function signIn(username: string, password: string) {
         try {
             const {message, ...loginRes} = await authService.login(username, password)
+            window.localStorage.setItem('username', `${username}`)
+
             setCurrentUser(prev => prev ? ({...(prev), username}) : ({username}))
             setSessionInfo(loginRes)
             setAuthStatus(AuthStatus.SignedIn)
@@ -145,7 +139,8 @@ const AuthProvider = ({children}: Props) => {
     async function signUp(username: string, email: string, password: string) {
         try {
             await authService.signUp(username, password, email)
-            // create teacher for new signup user
+            window.localStorage.setItem('username', `${username}`)
+
             const userMutation: any = await amplifyClient.graphql({
                 query: createTeacher,
                 variables: {

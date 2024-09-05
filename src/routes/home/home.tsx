@@ -10,7 +10,7 @@ import {useContext} from "react";
 import {AuthContext} from "../../contexts/authContext.tsx";
 import {useNavigate} from "react-router-dom";
 import {Pathname} from "../constants.ts";
-import StudentsSection from "../../components/TasksSection/StudentsSection.tsx";
+import StudentsSection from "../../components/StudentsSection/StudentsSection.tsx";
 
 const NAVIGATION: Navigation = [
     {
