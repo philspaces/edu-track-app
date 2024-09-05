@@ -20,24 +20,27 @@ import {useContext, useEffect, useState} from "react";
 import {AuthContext} from "../../contexts/authContext.tsx";
 import {format} from "date-fns";
 
-const StudentCard = ({student}) => (
+const StudentCard = ({student, onEdit, onDelete}) => (
     <Card>
         <CardContent>
             <Typography variant="h6" component="div">
                 {student.firstName} {student.lastName}
             </Typography>
+            <Typography variant="body2">
+                Student ID: {student.studentID}
+            </Typography>
             <Typography variant="body2" color="textSecondary">
                 {student.email}
             </Typography>
             <Typography variant="body2">
-                Date of Birth: {format(new Date(student.dob), 'P') }
+                Date of Birth: {format(new Date(student.dob), 'P')}
             </Typography>
         </CardContent>
         <CardActions disableSpacing>
-            <IconButton aria-label="edit">
+            <IconButton aria-label="edit" onClick={onEdit}>
                 <EditNoteIcon/>
             </IconButton>
-            <IconButton aria-label="delete">
+            <IconButton aria-label="delete" onClick={onDelete}>
                 <DeleteIcon/>
             </IconButton>
         </CardActions>
@@ -46,12 +49,14 @@ const StudentCard = ({student}) => (
 
 const StudentsSection = () => {
     const theme = useTheme(); // Access the theme
-    const {modal, openModal} = useGlobalState();
+    const {modal, openModal, isStudentsUpdated} = useGlobalState();
 
     const authContext = useContext(AuthContext)
     const currentUser = authContext.currentUser
     const amplifyClient = useAmplifyClient();
     const [students, setStudents] = useState([]);
+    const [editData, setEditData] = useState()
+
 
     const fetchStudents = async () => {
         try {
@@ -60,7 +65,6 @@ const StudentsSection = () => {
                 variables: {filter: {teacherID: {eq: currentUser.userID}}}
             });
 
-            console.log('studentData: ', studentData);
             setStudents(studentData.data.listStudents.items);
         } catch (error) {
             console.error('Error fetching students:', error);
@@ -69,13 +73,23 @@ const StudentsSection = () => {
 
     useEffect(() => {
         fetchStudents();
-    }, []);
+    }, [isStudentsUpdated]);
 
+
+    const handleEditStudentClick = (student) => {
+        setEditData(student)
+        openModal()
+    }
+
+    const handleAddNewClick = () => {
+        setEditData(null)
+        openModal()
+    }
 
     const cardSize = {xs: 12, md: 6, lg: 3}
     return (
         <Box sx={{p: 3}}>
-            {modal && <StudentCreationModal/>}
+            {modal && <StudentCreationModal prefilledData={editData}/>}
 
             <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                 <Typography variant="h5" sx={{fontWeight: 'bold'}}>
@@ -89,7 +103,7 @@ const StudentsSection = () => {
                 <Grid container spacing={2}>
                     {students.map((student) => (
                         <Grid key={student.id} size={cardSize}>
-                            <StudentCard student={student}/>
+                            <StudentCard student={student} onEdit={() => handleEditStudentClick(student)}/>
                         </Grid>
                     ))}
                     <Grid size={cardSize}>
@@ -104,7 +118,7 @@ const StudentsSection = () => {
                                     : theme.palette.grey[300],
                             },
                         }}
-                              onClick={openModal}
+                              onClick={handleAddNewClick}
                         >
                             <CardContent sx={{textAlign: 'center'}}>
                                 <AddIcon sx={{fontSize: 40, mb: 2}}/>

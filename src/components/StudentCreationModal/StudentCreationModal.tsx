@@ -3,8 +3,9 @@ import {Box, Button, Checkbox, FormControlLabel, IconButton, Modal, TextField, T
 import {Close as CloseIcon} from '@mui/icons-material';
 import {useGlobalState} from "../../contexts/globalProvider.tsx";
 import {useAmplifyClient} from "../../contexts/amplifyClientContext.tsx";
-import {createStudent} from "../../graphql/mutations.js";
+import {createStudent, updateStudent} from "../../graphql/mutations.js";
 import {AuthContext} from "../../contexts/authContext.tsx";
+import {format} from "date-fns";
 
 interface IStudent {
     studentID: string
@@ -15,20 +16,36 @@ interface IStudent {
     email?: string
 }
 
-const StudentCreationModal = ({}) => {
+const defaultStudentData: IStudent = {
+    studentID: '',
+    teacherID: '',
+    firstName: '',
+    lastName: '',
+    dob: '',
+    email: '',
+}
+
+interface Props {
+    isEditing?: boolean
+    prefilledData?: Partial<IStudent>
+}
+
+const StudentCreationModal = ({isEditing, prefilledData}: Props) => {
     const {modal: open, closeModal} = useGlobalState();
     const amplifyClient = useAmplifyClient()
     const {currentUser} = useContext(AuthContext)
 
     const [error, setError] = useState('')
-    const [studentData, setStudentData] = useState<IStudent>({
-        studentID: '',
-        teacherID: currentUser.userID,
-        firstName: '',
-        lastName: '',
-        dob: '',
-        email: '',
-    });
+
+    const initialStudentData = {
+        ...(prefilledData ? ({
+            ...prefilledData,
+            dob: format(new Date(prefilledData?.dob), 'yyyy-MM-dd')
+        }) : defaultStudentData),
+        teacherID: currentUser?.userID
+    }
+
+    const [studentData, setStudentData] = useState<IStudent>(initialStudentData);
 
     const isValid = studentData.studentID.length === 0 || studentData.firstName.length === 0
 
@@ -42,15 +59,33 @@ const StudentCreationModal = ({}) => {
 
     const handleSubmitStudentCreation = async (data) => {
         try {
-            await amplifyClient.graphql({
-                query: createStudent,
-                variables: {
-                    input: {
-                        ...data,
-                        teacherID: currentUser.userID
+            const isEditing = data.id
+            if (isEditing) {
+                await amplifyClient.graphql({
+                    query: updateStudent,
+                    variables: {
+                        input: {
+                            id: data.id,
+                            studentID: data.studentID,
+                            firstName: data.firstName,
+                            lastName: data.lastName,
+                            email: data.email,
+                            dob: data.dob,
+                            teacherID: currentUser.userID
+                        }
                     }
-                }
-            });
+                });
+            } else {
+                await amplifyClient.graphql({
+                    query: createStudent,
+                    variables: {
+                        input: {
+                            ...data,
+                            teacherID: currentUser.userID
+                        }
+                    }
+                });
+            }
         } catch (err) {
             if (err instanceof Error) {
                 setError(err.message)

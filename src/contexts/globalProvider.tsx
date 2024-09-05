@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 export interface IGlobal {
     isLoading?: boolean,
     modal?: boolean,
+    isStudentsUpdated?: boolean,
     openModal: () => void,
     closeModal: () => void,
 }
@@ -14,6 +15,7 @@ export interface IGlobal {
 const defaultState = {
     isLoading: false,
     modal: false,
+    isStudentsUpdated: false,
     openModal: () => {
     },
     closeModal: () => {
@@ -27,6 +29,7 @@ const GlobalProvider = ({children}) => {
 
     const [isLoading, setIsLoading] = useState(false);
     const [modal, setModal] = useState(false);
+    const [isStudentsUpdated, setIsStudentsUpdated] = useState(false);
 
     const openModal = () => {
         setModal(true);
@@ -42,6 +45,7 @@ const GlobalProvider = ({children}) => {
             .graphql({query: subscriptions.onCreateStudent})
             .subscribe({
                 next: ({data}) => {
+                    setIsStudentsUpdated(prev => !prev)
                     toast.success('New student added!')
                     console.log(data)
                 },
@@ -55,6 +59,7 @@ const GlobalProvider = ({children}) => {
             .graphql({query: subscriptions.onUpdateStudent})
             .subscribe({
                 next: ({data}) => {
+                    setIsStudentsUpdated(prev => !prev)
                     toast.success('Update successfully!')
                     console.log(data)
                 },
@@ -68,6 +73,7 @@ const GlobalProvider = ({children}) => {
             .graphql({query: subscriptions.onDeleteStudent})
             .subscribe({
                 next: ({data}) => {
+                    setIsStudentsUpdated(prev => !prev)
                     toast.success('Delete successfully!')
                     console.log(data)
                 },
@@ -89,6 +95,7 @@ const GlobalProvider = ({children}) => {
         modal,
         openModal,
         closeModal,
+        isStudentsUpdated
     }
 
     return (
