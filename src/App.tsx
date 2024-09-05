@@ -10,6 +10,8 @@ import VerifyCode from "./routes/auth/verifyCode.tsx";
 import Landing from "./routes/landing/landing.tsx";
 import {Toaster} from "react-hot-toast";
 import {Pathname} from "./routes/constants.ts";
+import {AmplifyClientProvider} from "./contexts/amplifyClientContext.tsx";
+
 // import GlobalProvider from "./contexts/globalProvider.tsx";
 
 const lightTheme = createTheme({
@@ -43,17 +45,19 @@ const MainRoute = () => (
 function App() {
     return <ThemeProvider theme={lightTheme}>
         <CssBaseline/>
-        <AuthProvider>
-            <AuthIsSignedIn>
-                {/*<GlobalProvider>*/}
+        <AmplifyClientProvider>
+            <AuthProvider>
+                <AuthIsSignedIn>
+                    {/*<GlobalProvider>*/}
                     <Toaster/>
                     <MainRoute/>
-                {/*</GlobalProvider>*/}
-            </AuthIsSignedIn>
-            <AuthIsNotSignedIn>
-                <SignInRoute/>
-            </AuthIsNotSignedIn>
-        </AuthProvider>
+                    {/*</GlobalProvider>*/}
+                </AuthIsSignedIn>
+                <AuthIsNotSignedIn>
+                    <SignInRoute/>
+                </AuthIsNotSignedIn>
+            </AuthProvider>
+        </AmplifyClientProvider>
     </ThemeProvider>
 }
 
