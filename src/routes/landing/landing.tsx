@@ -1,6 +1,6 @@
 import {useNavigate} from 'react-router-dom'
-import logoImage from '../../assets/react.svg'
-import {Box, Button, Grid, styled, Typography} from "@mui/material";
+import logoImage from '../../assets/edu-track-logo.png'
+import {Box, Button, styled} from "@mui/material";
 import {FunctionComponent} from "react";
 import {Pathname} from "../constants.ts";
 
@@ -25,15 +25,10 @@ const Landing: FunctionComponent = () => {
     }
 
     return (<StyledGrid className={classes.root}>
-            <Box m={2}>
-                <img src={logoImage} width={224} height={224} alt="logo"/>
+            <Box>
+                <img src={logoImage} width={500} height={500} alt="logo"/>
             </Box>
-            <Box m={2}>
-                <Typography className={classes.title} variant="h3">
-                    Edu Track App
-                </Typography>
-            </Box>
-            <Box m={2}>
+            <Box>
                 <Button onClick={signIn} variant="contained" color="primary">
                     SIGN IN
                 </Button>

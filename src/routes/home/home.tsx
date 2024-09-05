@@ -1,6 +1,4 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import {createTheme} from '@mui/material/styles';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import {AppProvider, Session} from '@toolpad/core/AppProvider';
@@ -96,8 +94,7 @@ export default function Home() {
         <AppProvider
             navigation={NAVIGATION}
             branding={{
-                logo: <img src="https://mui.com/static/logo.png" alt="MUI logo"/>,
-                title: 'MUI',
+                title: 'EDU Track App',
             }}
             session={session}
             authentication={authentication}
