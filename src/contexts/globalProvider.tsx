@@ -47,7 +47,6 @@ const GlobalProvider = ({children}) => {
                 next: ({data}) => {
                     setIsStudentsUpdated(prev => !prev)
                     toast.success('New student added!')
-                    console.log(data)
                 },
                 error: (error) => {
                     toast.error("Something went wrong")
@@ -61,7 +60,6 @@ const GlobalProvider = ({children}) => {
                 next: ({data}) => {
                     setIsStudentsUpdated(prev => !prev)
                     toast.success('Update successfully!')
-                    console.log(data)
                 },
                 error: (error) => {
                     toast.error("Something went wrong")
@@ -75,7 +73,6 @@ const GlobalProvider = ({children}) => {
                 next: ({data}) => {
                     setIsStudentsUpdated(prev => !prev)
                     toast.success('Delete successfully!')
-                    console.log(data)
                 },
                 error: (error) => {
                     toast.error("Something went wrong")

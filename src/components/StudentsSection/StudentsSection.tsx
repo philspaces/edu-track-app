@@ -19,6 +19,7 @@ import {listStudents} from "../../graphql/queries.js";
 import {useContext, useEffect, useState} from "react";
 import {AuthContext} from "../../contexts/authContext.tsx";
 import {format} from "date-fns";
+import {createStudent, deleteStudent} from "../../graphql/mutations.js";
 
 const StudentCard = ({student, onEdit, onDelete}) => (
     <Card>
@@ -48,7 +49,7 @@ const StudentCard = ({student, onEdit, onDelete}) => (
 );
 
 const StudentsSection = () => {
-    const theme = useTheme(); // Access the theme
+    const theme = useTheme();
     const {modal, openModal, isStudentsUpdated} = useGlobalState();
 
     const authContext = useContext(AuthContext)
@@ -81,6 +82,18 @@ const StudentsSection = () => {
         openModal()
     }
 
+    const handleDeleteStudentClick = async (student) => {
+        // Simplification: Skip confirm delete users
+        await amplifyClient.graphql({
+            query: deleteStudent,
+            variables: {
+                input: {
+                    id: student.id
+                }
+            }
+        });
+    }
+
     const handleAddNewClick = () => {
         setEditData(null)
         openModal()
@@ -103,7 +116,7 @@ const StudentsSection = () => {
                 <Grid container spacing={2}>
                     {students.map((student) => (
                         <Grid key={student.id} size={cardSize}>
-                            <StudentCard student={student} onEdit={() => handleEditStudentClick(student)}/>
+                            <StudentCard student={student} onEdit={() => handleEditStudentClick(student)} onDelete={() => handleDeleteStudentClick(student)}/>
                         </Grid>
                     ))}
                     <Grid size={cardSize}>
