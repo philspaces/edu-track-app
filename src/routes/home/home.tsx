@@ -4,11 +4,11 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import {AppProvider, Session} from '@toolpad/core/AppProvider';
 import {DashboardLayout} from '@toolpad/core/DashboardLayout';
 import type {Navigation, Router} from '@toolpad/core';
-import {useContext} from "react";
-import {AuthContext} from "../../contexts/authContext.tsx";
-import {useNavigate} from "react-router-dom";
-import {Pathname} from "../constants.ts";
-import StudentsSection from "../../components/StudentsSection/StudentsSection.tsx";
+import {useContext} from 'react';
+import {AuthContext} from '../../contexts/authContext.tsx';
+import {useNavigate} from 'react-router-dom';
+import {Pathname} from '../constants.ts';
+import StudentsSection from '../../components/StudentsSection/StudentsSection.tsx';
 
 const NAVIGATION: Navigation = [
     {

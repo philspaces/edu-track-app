@@ -43,3 +43,26 @@ npm run dev
 This will start the development server, and you'll see output in your terminal, indicating that Vite is building and serving your project.
 
 By default, Vite runs on `http://localhost:5173/`. Open that URL in your browser to view the app.
+
+---
+
+### Deployment
+
+### Configurations
+amplify/.config/project-config.json
+
+(team hosting)
+amplify/team-provider-info.json
+
+If you need to update the hosting configuration (e.g., the distribution directory or bucket details)
+```bash
+amplify hosting add
+```
+
+
+### For Amplify CLI Manual Hosting
+
+Publish FE Changes
+```bash
+amplfy publish
+```
