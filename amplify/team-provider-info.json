@@ -22,5 +22,26 @@
         }
       }
     }
+  },
+  "main": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-edutrack-main-824ba-authRole",
+      "UnauthRoleArn": "arn:aws:iam::302263083994:role/amplify-edutrack-main-824ba-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::302263083994:role/amplify-edutrack-main-824ba-authRole",
+      "Region": "ap-southeast-2",
+      "DeploymentBucketName": "amplify-edutrack-main-824ba-deployment",
+      "UnauthRoleName": "amplify-edutrack-main-824ba-unauthRole",
+      "StackName": "amplify-edutrack-main-824ba",
+      "StackId": "arn:aws:cloudformation:ap-southeast-2:302263083994:stack/amplify-edutrack-main-824ba/0989df90-d35b-11ef-ad26-069ca7a3deab",
+      "AmplifyAppId": "d35r8mrdmvzimo"
+    },
+    "categories": {
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "d35r8mrdmvzimo",
+          "type": "manual"
+        }
+      }
+    }
   }
 }
