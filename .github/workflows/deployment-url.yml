@@ -3,10 +3,10 @@ name: PR Comment with Deployment URL
 on:
   pull_request:
     types: [opened]
-    branches-ignore:
-      - master
-      - main
-      - dev
+#    branches-ignore:
+#      - master
+#      - main
+#      - dev
 
 jobs:
   comment-on-pr:
