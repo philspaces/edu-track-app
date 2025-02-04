@@ -42,6 +42,7 @@ function SignIn() {
         }
     };
 
+    console.log('Epic A')
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline />
@@ -57,7 +58,7 @@ function SignIn() {
                     <LockOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
-                    Sign in (Epic A - feature A)
+                    Sign in (Epic A - feature A) (Feature B)
                 </Typography>
                 <Box component="form" onSubmit={handleSignIn} noValidate sx={{ mt: 1 }}>
                     <Username username={username} setUsername={setUsername} usernameIsValid={usernameIsValid} />
