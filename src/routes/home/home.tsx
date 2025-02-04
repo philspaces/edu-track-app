@@ -94,7 +94,7 @@ export default function Home() {
         <AppProvider
             navigation={NAVIGATION}
             branding={{
-                title: 'EDU Track App',
+                title: 'EDU Track App (Feature A)',
             }}
             session={session}
             authentication={authentication}
