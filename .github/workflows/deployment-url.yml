@@ -1,0 +1,22 @@
+name: PR Comment with Deployment URL
+
+on:
+  pull_request:
+    types: [opened]
+    branches-ignore:
+      - master
+      - dev
+
+jobs:
+  comment-on-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add PR Comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            🚀 Your PR is hosted at:  
+            👉 https://${{ github.event.pull_request.head.ref }}.${{ secrets.APP_ID }}.amplifyapp.com
+          edit-mode: replace
