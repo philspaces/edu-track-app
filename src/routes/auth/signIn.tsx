@@ -42,6 +42,7 @@ function SignIn() {
         }
     };
 
+    console.log('Epic A')
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline />
