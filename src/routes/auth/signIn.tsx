@@ -57,7 +57,7 @@ function SignIn() {
                     <LockOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
-                    Sign in
+                    Sign in (feature D)
                 </Typography>
                 <Box component="form" onSubmit={handleSignIn} noValidate sx={{ mt: 1 }}>
                     <Username username={username} setUsername={setUsername} usernameIsValid={usernameIsValid} />
