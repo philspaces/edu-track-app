@@ -3,13 +3,13 @@ name: PR Comment with Deployment URL
 on:
   pull_request:
     types: [ opened ]
-    branches:
-      - '*'         # matches every branch that doesn't contain a '/'
-      - '*/*'       # matches every branch containing a single '/'
-      - '**'        # matches every branch
-      - '!main'     # excludes main
-      - '!master'   # excludes master
-      - '!dev'      # excludes dev
+#    branches:
+#      - '*'         # matches every branch that doesn't contain a '/'
+#      - '*/*'       # matches every branch containing a single '/'
+#      - '**'        # matches every branch
+#      - '!main'     # excludes main
+#      - '!master'   # excludes master
+#      - '!dev'      # excludes dev
 
 jobs:
   comment-on-pr:
