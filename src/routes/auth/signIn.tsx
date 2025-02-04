@@ -58,7 +58,7 @@ function SignIn() {
                     <LockOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
-                    Sign in (Feature B)
+                    Sign in (Epic A - feature A) (Feature B)
                 </Typography>
                 <Box component="form" onSubmit={handleSignIn} noValidate sx={{ mt: 1 }}>
                     <Username username={username} setUsername={setUsername} usernameIsValid={usernameIsValid} />
